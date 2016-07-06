@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-
 import Backbone from 'backbone'
 
 import AppView from './AppView.js'
@@ -25,7 +24,10 @@ const app = function() {
     //The heart of of the app where all changing of views is handled.
     const GifRouter = Backbone.Router.extend({
         routes: {
-            'search/:query': '_handleSearch'
+            //search is the first part of the hash seperated by /:query,  query can now be passed an input to _handleSearch.
+            'search/:query': '_handleSearch',
+            'home': 'showAllGifs',
+            '#default': 'redirect'
         },
 
         _handleSearch: function(query) {
@@ -43,6 +45,10 @@ const app = function() {
             //Since we're using React to render views here, this is where we 'mount' the component.  Basically we are loading in the info that will be rendered.  Note that we aren't using .then here.  With React, we have a virtual DOM always listening for changes, once it hears the change, it will auto render with new data.  Zamn!
             ReactDOM.render(<AppView collection={gifColl} />, document.querySelector('.container'))
         
+        },
+
+        redirect: function() {
+            location.hash = 'home'
         },
 
         initialize: function() {
