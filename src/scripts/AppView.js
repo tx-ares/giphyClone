@@ -9,6 +9,7 @@ const AppView = React.createClass({
 	//The idea is to keep one smart component that will listen to all changes so any change
 	//can trigger a re-render.  Look up Flux design.
 	getInitialState: function(){
+		console.log("Got initial State")
 		return {
 			gifColl: this.props.collection,
 			focus: ''
@@ -17,11 +18,13 @@ const AppView = React.createClass({
 
 	componentWillMount: function(){
 		console.log('mounting')
+
 		this.state.gifColl.on('sync update', ()=>{
 			
 			this.setState({
 				gifColl: this.state.gifColl
 			})
+
 		//We will need a pub sub system, or a event listener / action system.  Vanilla React does not have this, so we will utilize Backbone.Event.
 		//So, when the 'newId' is triggered, do the annonymous function which will set state.
 		Backbone.Events.on('newId', (payload) => {
@@ -37,9 +40,9 @@ const AppView = React.createClass({
 		console.log(this.state.gifColl)
 
 		return (
-			<div id="container">
+			<div className="container">
 				<Header />
-				<GiphyContainer gifId={this.state.focus} gifColl={this.state.gifColl} />
+				<GifContainer gifId={this.state.focus} gifColl={this.state.gifColl} />
 			{/* <div id="overlay"></div> */}
 			</div>
 			)
@@ -98,7 +101,7 @@ const SingleGif = React.createClass({
 	}
 })
 
-const GiphyContainer = React.createClass({
+const GifContainer = React.createClass({
 	
 	_gifMap: function(gifModel){
 		//Make note that here we are passing in model into props for this component, but key will not be passed.  Why?  Because key is a special react syntax that gets stored elsewhere to give the model a unique collection id or "cid".
